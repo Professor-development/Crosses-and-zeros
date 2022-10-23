@@ -4,7 +4,6 @@ def print_matrix(mat):
 
 
 def win(mat):
-    win = False
     for row in mat:
         if row[1] == row[2] == row[3] != '-':
             return True
@@ -19,23 +18,31 @@ def win(mat):
 
 
 def user_input(matrix, mot):
-    if mot % 2 == 0:
-        user_in = list(map(int, input(f"Ход крестиков. Введите координаты хода в формате - X Y: ").split()))
-        if check(user_in, matrix):
-            return user_in
-        else:
-            return user_input(matrix, mot)
+    player = ('крестики', 'нолики')[mot % 2]
+    user_in = input(f"Ходят {player}. Введите координаты хода в формате - X Y: ")
+    if check(user_in, matrix):
+        user_in = list(map(int, user_in.split()))
+        return user_in
     else:
-        user_in = list(map(int, input(f"Ход Ноликов. Введите координаты хода в формате - X Y: ").split()))
-        if check(user_in, matrix):
-            return user_in
-        else:
-            return user_input(matrix, mot)
+        return user_input(matrix, mot)
 
 
-def check(position_check, matrix):
+def check(position, matrix):
+    if len(position) != 3:
+        print("Недопустимый формат ввода")
+        return False
+    elif position[1] == " " and (position[0] != " " and position[2] != " "):
+        position_check = list(position.split())
+    else:
+        print("Недопустимый формат ввода")
+        return False
+    if position_check[0].isalpha() or position_check[1].isalpha():
+        print("Недопустимый формат ввода")
+        return False
+    else:
+        position_check = list(map(int, position_check))
     if position_check[1] > 3 or position_check[1] < 1 or position_check[0] > 3 or position_check[0] < 1:
-        print("Координаты находяться за пределами ввода, введите коректные координаты!")
+        print("Координаты находяться за пределами ввода, введите корректные координаты!")
         return False
     elif matrix[position_check[1]][position_check[0]] == "-":
         return True
@@ -64,7 +71,7 @@ def game(matrix):
         print_matrix(matrix)
 
 
-game_place = [[" ", 1, 2, 3], [ 1, '-', '-', '-'], [ 2, '-', '-', '-'], [ 3, '-', '-', '-']]
+game_place = [[" ", 1, 2, 3], [1, '-', '-', '-'], [2, '-', '-', '-'], [3, '-', '-', '-']]
 
 game(game_place)
 print("Нажмите Enter, чтобы выйти из программы")
